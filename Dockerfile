@@ -1,8 +1,8 @@
 ####
 # Build :
-# docker build -f Dockerfile -t k8s-spring-demo .
+# docker build -f Dockerfile -t html-operations .
 # Then run the container using:
-# docker run -i --rm -p 8081:8081 k8s-spring-demo
+# docker run -i --rm -p 8081:8081 html-operations
 ####
 
 FROM quay.io/devfile/maven:3.8.1-openjdk-17-slim
@@ -17,7 +17,7 @@ COPY src src
 RUN mvn package -Dmaven.test.skip=true
 
 FROM openjdk:11-jdk
-COPY --from=0 /build/target/k8s-spring-demo.jar /app/target/k8s-spring-demo.jar
+COPY --from=0 /build/target/html-operations.jar /app/target/html-operations.jar
 
-EXPOSE 8081
-ENTRYPOINT [ "java", "-jar", "/app/target/k8s-spring-demo.jar", "--server.port=8081" ]
+EXPOSE 8080
+ENTRYPOINT [ "java", "-jar", "/app/target/html-operations.jar", "--server.port=8080" ]

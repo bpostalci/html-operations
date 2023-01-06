@@ -13,16 +13,21 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
 @Slf4j(topic = "html-operations")
-
 @Service
 public class HtmlSyntaxCheckerService {
 
-    @Value("${html-syntax-checker-url}")
+    @Value("${HTML_SYNTAX_CHECKER_URL}")
     private String htmlSyntaxCheckerUrl;
 
     public CheckSyntaxDto checkSyntax(String html) {
 
         try {
+            if (htmlSyntaxCheckerUrl == null) {
+                log.error("htmlSyntaxCheckerUrl is null");
+            }
+            String uri = "http://" + htmlSyntaxCheckerUrl + "/check-syntax";
+            log.info("uri: {}", uri);
+
             RestTemplate restTemplate = new RestTemplate();
 
             HttpHeaders headers = new HttpHeaders();
@@ -34,7 +39,7 @@ public class HtmlSyntaxCheckerService {
             HttpEntity<MultiValueMap<String, String>> request =
                     new HttpEntity<>(map, headers);
 
-            ResponseEntity<String> response = restTemplate.postForEntity(htmlSyntaxCheckerUrl, request, String.class);
+            ResponseEntity<String> response = restTemplate.postForEntity(uri, request, String.class);
             if (response.getStatusCode() != HttpStatus.OK) {
                 throw new RuntimeException("" + response.getStatusCodeValue());
             }

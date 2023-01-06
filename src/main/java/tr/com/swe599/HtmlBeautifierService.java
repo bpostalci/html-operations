@@ -12,13 +12,19 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
+@Slf4j(topic = "html-operations")
 @Service
 public class HtmlBeautifierService {
 
-    @Value("${html-beautifier-url}")
+    @Value("${HTML_BEAUTIFIER_URL}")
     private String htmlBeautifierUrl;
 
     public BeautifyDto beautify(String html) {
+        if (htmlBeautifierUrl == null) {
+            log.error("htmlBeautifierUrl is null");
+        }
+        String uri = "http://" + htmlBeautifierUrl + "/beautify";
+        log.info("uri: {}", uri);
 
         RestTemplate restTemplate = new RestTemplate();
 
@@ -31,7 +37,7 @@ public class HtmlBeautifierService {
         HttpEntity<MultiValueMap<String, String>> request =
                 new HttpEntity<>(map, headers);
 
-        ResponseEntity<String> response = restTemplate.postForEntity(htmlBeautifierUrl, request, String.class);
+        ResponseEntity<String> response = restTemplate.postForEntity(uri, request, String.class);
         if (response.getStatusCode() != HttpStatus.OK) {
             throw new RuntimeException("" + response.getStatusCodeValue());
         }
