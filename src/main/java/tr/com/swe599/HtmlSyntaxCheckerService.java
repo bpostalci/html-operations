@@ -18,6 +18,11 @@ public class HtmlSyntaxCheckerService {
 
     @Value("${HTML_SYNTAX_CHECKER_URL}")
     private String htmlSyntaxCheckerUrl;
+    private final String apiKey;
+
+    HtmlSyntaxCheckerService(ApiKey apiKey) {
+        this.apiKey = apiKey.getApiKey();
+    }
 
     public CheckSyntaxDto checkSyntax(String html) {
 
@@ -32,6 +37,7 @@ public class HtmlSyntaxCheckerService {
 
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_JSON);
+            headers.add("api_key", apiKey);
 
             MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
             map.add("html", html);

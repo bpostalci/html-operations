@@ -19,6 +19,12 @@ public class HtmlBeautifierService {
     @Value("${HTML_BEAUTIFIER_URL}")
     private String htmlBeautifierUrl;
 
+    private final String apiKey;
+
+    HtmlBeautifierService(ApiKey apiKey) {
+        this.apiKey = apiKey.getApiKey();
+    }
+
     public BeautifyDto beautify(String html) {
         if (htmlBeautifierUrl == null) {
             log.error("htmlBeautifierUrl is null");
@@ -30,6 +36,7 @@ public class HtmlBeautifierService {
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.add("api_key", apiKey);
 
         MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
         map.add("html", html);

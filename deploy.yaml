@@ -36,6 +36,11 @@ spec:
                 configMapKeyRef:
                   name: html-operations-configmap
                   key: html_beautifier_url
+            - name: API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: html-operations-secret
+                  key: api_key
 ---
 kind: Service
 apiVersion: v1
